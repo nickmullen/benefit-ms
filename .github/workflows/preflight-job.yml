@@ -1,0 +1,118 @@
+name: Sample Microservice CI
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop, master, main, "hotfix/**", "release/**"]
+
+jobs:
+  install_dependencies:
+    name: bootstraping packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Commit
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        # Check for `cache-hit` (`steps.npm-cache.cache-hit != 'true'`)
+        # If there's a cache hit, we skip this step (the dependencies are already available)
+        # If there's no cache hit, we run "npm install"
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: |
+          npm ci --legacy-peer-deps
+
+  lint:
+    name: code linting
+    runs-on: ubuntu-latest
+
+    needs: install_dependencies
+
+    steps:
+      - name: Checkout Commit
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Restore npm dependencies
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Check linting
+        run: |
+          npm run lint
+
+  unit_test:
+    name: unit tests with coverage
+    runs-on: ubuntu-latest
+
+    needs: install_dependencies
+
+    steps:
+      - name: Checkout Commit
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Restore npm dependencies
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: run unit tests
+        run: |
+          npm run test:coverage
+
+  build:
+    name: building the app
+    runs-on: ubuntu-latest
+
+    needs: [lint, unit_test]
+
+    steps:
+      - name: Checkout Commit
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Restore npm dependencies
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: building
+        run: |
+          npm run build
