@@ -1,8 +1,10 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import LOG from "../library/logging";
 
 // routes
 import userRoutes from "../route/user";
+import benefitRoutes from "../route/benefit";
+
 import healthCheck from "../route/health";
 
 const createServer = () => {
@@ -27,13 +29,14 @@ const createServer = () => {
   app.use(express.json());
 
   /** Rules of our API */
-  app.use((req, res, next) => {
+
+  app.use((req: Request, res: Response, next: NextFunction) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
     if (req.method == "OPTIONS") {
       res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-      return res.status(200).json({});
+      res.status(200).json({});
     }
 
     next();
@@ -41,6 +44,7 @@ const createServer = () => {
 
   /** Routes */
   app.use("/v1/users", userRoutes);
+  app.use("/v3/benefits", benefitRoutes);
 
   /** Health check */
   app.use("/health", healthCheck);

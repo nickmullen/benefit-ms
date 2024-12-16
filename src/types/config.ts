@@ -12,6 +12,7 @@ export type ProjectConfiguration = {
   SERVICE_NAME: string;
   LOG_LEVEL: string;
   SHARED_SECRETS: string;
+  LANGUAGES: string;
 };
 
 export type QueryObj = {

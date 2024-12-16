@@ -1,21 +1,21 @@
-/*instrumentation.ts*/
-import { NodeSDK } from "@opentelemetry/sdk-node";
-// import { ConsoleSpanExporter } from "@opentelemetry/sdk-trace-node";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
-import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
-import { PeriodicExportingMetricReader, ConsoleMetricExporter } from "@opentelemetry/sdk-metrics";
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
+import { NodeSDK } from '@opentelemetry/sdk-node';
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+import { Resource } from '@opentelemetry/resources';
+import { SEMRESATTRS_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
+
+
+const exporterOptions = {
+  url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT, // grcp
+};
+
+const traceExporter = new OTLPTraceExporter(exporterOptions);
 
 const sdk = new NodeSDK({
-  // traceExporter: new ConsoleSpanExporter(),
-  traceExporter: new OTLPTraceExporter({
-    // optional - default url is http://localhost:4318/v1/traces
-    // url: "<your-otlp-endpoint>/v1/traces",
-    // optional - collection of custom headers to be sent with each request, empty by default
-    headers: {}
+  resource: new Resource({
+    [SEMRESATTRS_SERVICE_NAME]: 'my-service',
   }),
-  metricReader: new PeriodicExportingMetricReader({
-    exporter: new ConsoleMetricExporter()
-  }),
+  traceExporter,
   instrumentations: [getNodeAutoInstrumentations()]
 });
 

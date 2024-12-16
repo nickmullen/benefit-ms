@@ -14,6 +14,8 @@ const SERVICE_NAME = process.env.SERVICE_NAME || "Microservice";
 const LOG_LEVEL = process.env.LOG_LEVEL || "info";
 
 const SHARED_SECRETS = process.env.SHARED_SECRETS || "";
+const LANGUAGES = process.env.LANGUAGES || "";
+
 
 // this will contain global configs for the project
 export const CONFIG: ProjectConfiguration = {
@@ -28,5 +30,6 @@ export const CONFIG: ProjectConfiguration = {
   },
   SERVICE_NAME,
   LOG_LEVEL,
-  SHARED_SECRETS
+  SHARED_SECRETS,
+  LANGUAGES
 };

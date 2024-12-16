@@ -1,6 +1,11 @@
 import { QueryTypes, BindOrReplacements } from "sequelize";
 import { sequelize } from "../database/sequelize-db";
 
+import { Benefit } from "./benefit";
+import { BenefitGroup } from "./benefitGroup";
+import { ExclusionGroup } from "./exclusionGroup";
+
+
 import { Users } from "./user";
 
 const querySelect = async (query: string, replacements: BindOrReplacements) => {
@@ -16,11 +21,15 @@ export default {
 
   select: querySelect,
 
+  benefit: Benefit,
+  benefitGroup: BenefitGroup,
   users: Users,
 
   syncAll: async function () {
     let opts;
 
+
     await this.users.sync(opts);
+    await this.benefit.sync(opts);
   }
 };
