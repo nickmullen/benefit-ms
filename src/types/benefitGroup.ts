@@ -1,5 +1,8 @@
-import { Model, CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
+import { LocalisedString } from "./localisedString";
 
-export interface BenefitGroupModel extends Model<InferAttributes<BenefitGroupModel>, InferCreationAttributes<BenefitGroupModel>> {
+export type ExpandedBenefitGroup = {
   id: string;
+  names: Array<LocalisedString>;
+  createdAt: Date;
+  updatedAt: Date;
 }

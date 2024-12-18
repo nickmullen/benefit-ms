@@ -9,26 +9,26 @@ module.exports = {
         type: Sequelize.DataTypes.STRING(20),
         primaryKey: true
       },
-      benefit_group_id: Sequelize.DataTypes.STRING(40),
-      exclusion_group_id: Sequelize.DataTypes.STRING(40),
-      created_at: {
+      benefitGroupId: Sequelize.DataTypes.STRING(40),
+      exclusionGroupId: Sequelize.DataTypes.STRING(40),
+      createdAt: {
         type: "TIMESTAMP",
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         allowNull: false
       },
-      updated_at: {
+      updatedAt: {
         type: "TIMESTAMP",
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         allowNull: false
       }
     });
 
-    await queryInterface.addIndex("benefit", ["benefit_group_id"], {
-      name: "benefit_group_id_ix",
+    await queryInterface.addIndex("benefit", ["benefitGroupId"], {
+      name: "benefitGroupId_ix",
       unique: false
     });
-    await queryInterface.addIndex("benefit", ["exclusion_group_id"], {
-      name: "exclusion_group_id_ix",
+    await queryInterface.addIndex("benefit", ["exclusionGroupId"], {
+      name: "exclusionGroupId_ix",
       unique: false
     });
   },

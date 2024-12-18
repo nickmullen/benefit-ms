@@ -2,8 +2,8 @@ import express, { Request, Response, NextFunction } from "express";
 import LOG from "../library/logging";
 
 // routes
-import userRoutes from "../route/user";
 import benefitRoutes from "../route/benefit";
+import benefitGroupRoutes from "../route/benefitGroup";
 
 import healthCheck from "../route/health";
 
@@ -43,8 +43,8 @@ const createServer = () => {
   });
 
   /** Routes */
-  app.use("/v1/users", userRoutes);
   app.use("/v3/benefits", benefitRoutes);
+  app.use("/v3/benefitGroups", benefitGroupRoutes);
 
   /** Health check */
   app.use("/health", healthCheck);

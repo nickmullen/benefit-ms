@@ -1,12 +1,10 @@
 import { QueryTypes, BindOrReplacements } from "sequelize";
 import { sequelize } from "../database/sequelize-db";
 
-import { Benefit } from "./benefit";
-import { BenefitGroup } from "./benefitGroup";
-import { ExclusionGroup } from "./exclusionGroup";
-
-
-import { Users } from "./user";
+import { BenefitRecord } from "./benefit";
+import { BenefitGroupRecord } from "./benefitGroup";
+import { ExclusionGroupRecord } from "./exclusionGroup";
+import { TranslationRecord } from "./translation";
 
 const querySelect = async (query: string, replacements: BindOrReplacements) => {
   return await sequelize.query(query, {
@@ -21,15 +19,17 @@ export default {
 
   select: querySelect,
 
-  benefit: Benefit,
-  benefitGroup: BenefitGroup,
-  users: Users,
+  benefit: BenefitRecord,
+  benefitGroup: BenefitGroupRecord,
+  exclusionGroup: ExclusionGroupRecord,
+  translation: TranslationRecord,
 
   syncAll: async function () {
     let opts;
 
-
-    await this.users.sync(opts);
     await this.benefit.sync(opts);
+    await this.benefitGroup.sync(opts);
+    await this.exclusionGroup.sync(opts);
+    await this.translation.sync(opts);
   }
 };

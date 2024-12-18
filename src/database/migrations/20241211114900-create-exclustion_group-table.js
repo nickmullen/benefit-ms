@@ -1,17 +1,17 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("exclusion_group", {
+    return queryInterface.createTable("exclusionGroup", {
       id: {
         type: Sequelize.DataTypes.STRING(40),
         primaryKey: true
       },
-      parent_group_id: Sequelize.DataTypes.STRING(40),
-      created_at: {
+      parentGroupId: Sequelize.DataTypes.STRING(40),
+      createdAt: {
         type: "TIMESTAMP",
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         allowNull: false
       },
-      updated_at: {
+      updatedAt: {
         type: "TIMESTAMP",
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         allowNull: false
@@ -19,6 +19,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("exclusion_group");
+    return queryInterface.dropTable("exclusionGroup");
   }
 };

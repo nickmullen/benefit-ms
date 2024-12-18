@@ -1,16 +1,16 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("benefit_group", {
+    return queryInterface.createTable("benefitGroup", {
       id: {
         type: Sequelize.DataTypes.STRING(40),
         primaryKey: true
       },
-      created_at: {
+      createdAt: {
         type: "TIMESTAMP",
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         allowNull: false
       },
-      updated_at: {
+      updatedAt: {
         type: "TIMESTAMP",
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         allowNull: false
@@ -18,6 +18,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("benefit_group");
+    return queryInterface.dropTable("benefitGroup");
   }
 };

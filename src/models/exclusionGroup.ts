@@ -1,24 +1,40 @@
-import { DataTypes } from "sequelize";
 import { sequelize } from "../database/sequelize-db";
-import { ExclusionGroupModel } from "../types/exclusionGroup";
-// https://sequelize.org/api/v6/class/src/model.js~model
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 
-const ExclusionGroup = sequelize.define<ExclusionGroupModel>(
-  "exclusion_group",
-  {
-    // Model attributes are defined here
-    id: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-    },
-    parent_group_id: {
-      type: DataTypes.STRING,
-    }
+class ExclusionGroupRecord extends Model<InferAttributes<ExclusionGroupRecord>, InferCreationAttributes<ExclusionGroupRecord>> {
+  declare id: string;
+  declare parentGroupId: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+}
+
+ExclusionGroupRecord.init({
+  id: {
+    type: DataTypes.STRING,
+    primaryKey: true,
+    autoIncrement: false,
+    allowNull: false
   },
+  parentGroupId: {
+    type: DataTypes.STRING,
+    primaryKey: true,
+    autoIncrement: false,
+    allowNull: false
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW
+  },
+}, {
+  sequelize,
+  tableName: "exclusionGroup",
+  timestamps: true
+});
 
-  {
-    timestamps: false
-  }
-);
-
-export { ExclusionGroup };
+export { ExclusionGroupRecord };

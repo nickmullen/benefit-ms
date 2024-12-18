@@ -1,20 +1,33 @@
-import { DataTypes } from "sequelize";
 import { sequelize } from "../database/sequelize-db";
-import { BenefitGroupModel } from "../types/benefitGroup";
-// https://sequelize.org/api/v6/class/src/model.js~model
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 
-const BenefitGroup = sequelize.define<BenefitGroupModel>(
-  "benefit_group",
-  {
-    // Model attributes are defined here
-    id: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-    }
+class BenefitGroupRecord extends Model<InferAttributes<BenefitGroupRecord>, InferCreationAttributes<BenefitGroupRecord>> {
+  declare id: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+}
+
+BenefitGroupRecord.init({
+  id: {
+    type: DataTypes.STRING,
+    primaryKey: true,
+    autoIncrement: false,
+    allowNull: false
   },
-  {
-    timestamps: false
-  }
-);
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW
+  },
+}, {
+  sequelize,
+  tableName: "benefitGroup",
+  timestamps: true
+});
 
-export { BenefitGroup };
+export { BenefitGroupRecord };

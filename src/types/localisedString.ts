@@ -1,4 +1,4 @@
-export interface Name {
+export interface LocalisedString {
   value: string;
   language: string;
 }
