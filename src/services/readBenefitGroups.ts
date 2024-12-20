@@ -15,7 +15,7 @@ class ReadBenefitGroups {
       // then find the translated names for eachs
       const benefitGroupsToReturn = await Promise.all(
       foundGroups.map(async group => {
-        const names = await new ReadTranslations(group.dataValues.id, "name").find();
+        const names = await new ReadTranslations(group.dataValues.id, "name").returnMinimal();
         let groupToReturn: ExpandedBenefitGroup = {
           id: group.dataValues.id,
           names: names,

@@ -10,10 +10,10 @@ class ReadTranslations {
     this.type = type;
   };
 
-  public async find() {
-    // Find the benefit record, and then the associated translations
+  public async returnMinimal() {
     return await TranslationRecord.findAll(
-      { where: { entityId: this.entityId, type: this.type } }
+      { where: { entityId: this.entityId, type: this.type },
+        attributes: ['language','value'] }
     );
   };
 };

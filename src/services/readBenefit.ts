@@ -18,22 +18,14 @@ class ReadBenefit {
     const benefitRecord = await BenefitRecord.findByPk(this.snomed);
     if (!benefitRecord) throw new NotFoundError("Snomed " + this.snomed + " not found");
 
-    const foundTranslations = await new ReadTranslations(this.snomed, "name").find();
+    const foundTranslations = await new ReadTranslations(this.snomed, "name").returnMinimal();
     if (!foundTranslations) throw new NotFoundError("Snomed " + this.snomed + " had no translations");
-
-    // The translation object carried a lot of needless data.
-    const strippedTranslations = foundTranslations.map(translation => {
-      return {
-        language: translation.language,
-        value: translation.value
-      }
-    })
 
     return {
       snomed: benefitRecord.snomed,
       benefitGroupId: benefitRecord.benefitGroupId,
       exclusionGroupId: benefitRecord.exclusionGroupId,
-      names: strippedTranslations,
+      names: foundTranslations,
       createdAt: benefitRecord.createdAt,
       updatedAt: benefitRecord.updatedAt
     };
