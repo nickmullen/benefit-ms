@@ -1,8 +1,6 @@
-import { LocalisedString } from "../types/localisedString";
 import { BenefitGroupRecord } from "../models/benefitGroup";
 import { ExpandedBenefitGroup } from "../types/benefitGroup";
 import { ReadTranslations } from "./readTranslations";
-import { TranslationRecord } from "../models/translation";
 import LOG from "../library/logging";
 
 
@@ -14,11 +12,7 @@ class ReadBenefitGroups {
     try {
       //Find all the groups
       const foundGroups = await BenefitGroupRecord.findAll();
-      // then find the translated names for each
-
-      LOG.warn("** Groups: %o", foundGroups);
-
-
+      // then find the translated names for eachs
       const benefitGroupsToReturn = await Promise.all(
       foundGroups.map(async group => {
         const names = await new ReadTranslations(group.dataValues.id, "name").find();

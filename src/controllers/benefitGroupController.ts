@@ -14,7 +14,6 @@ const read = async (req: Request, res: Response, next: NextFunction) => {
     .catch((err: any) => {
       if (err instanceof Error) LOG.error(err.message);
       LOG.error("***** %s", JSON.stringify(err));
-      if (err.message === "Validation error") return handleResponse(res, 409, "Conflict. Validation error, probably already exists.", null);
       return handleResponse(res, 500, err.message, null);
     })
 };
