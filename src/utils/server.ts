@@ -1,9 +1,12 @@
 import express, { Request, Response, NextFunction } from "express";
-import LOG from "../library/logging";
+//middleware
+import { errorMiddleware, NotFoundError } from "../middleware/error";
+import logging from "../middleware/logging";
 
 // routes
 import benefitRoutes from "../route/benefit";
 import benefitGroupRoutes from "../route/benefitGroup";
+
 
 import healthCheck from "../route/health";
 
@@ -11,19 +14,7 @@ const createServer = () => {
   const app = express();
 
   /** Log the request */
-  app.use((req, res, next) => {
-    /** Log the req */
-    LOG.info(`Incoming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
-
-    res.on("finish", () => {
-      /** Log the res */
-      LOG.info(
-        `Result - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`
-      );
-    });
-
-    next();
-  });
+  app.use(logging);
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
@@ -49,16 +40,8 @@ const createServer = () => {
   /** Health check */
   app.use("/health", healthCheck);
 
-  /** Error handling */
-  app.use((req, res, next) => {
-    const error = new Error("Not found");
-
-    LOG.error(error);
-
-    res.status(404).json({
-      message: error.message
-    });
-  });
+  /** Error Handling - Note this must be the last middleware*/
+  app.use(errorMiddleware);
 
   return app;
 };

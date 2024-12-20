@@ -4,7 +4,7 @@ import { validateBenefitBody } from "../middleware/validateBenefit";
 
 const router = express.Router();
 
-router.get("/:snomed", controller.getBenefitBySnomed)
+router.get("/:snomed", controller.read)
 router.post("/", validateBenefitBody, controller.create)
 
 export = router;

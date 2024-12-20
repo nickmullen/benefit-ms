@@ -3,6 +3,7 @@ import { BenefitRecord } from "../models/benefit";
 import { ExpandedBenefit } from "../types/benefit";
 import { TranslationRecord } from "../models/translation";
 import LOG from "../library/logging";
+import { ReadBenefit } from "./readBenefit";
 
 
 class CreateBenefit {
@@ -20,43 +21,29 @@ class CreateBenefit {
   }
 
   public async save() {
-    let createdBenefit: ExpandedBenefit;
-    try {
 
-      const result = await BenefitRecord.create({
-        snomed: this.snomed,
-        benefitGroupId: this.benefitGroupId,
-        exclusionGroupId: this.exclusionGroupId
+
+    //TODO:
+    // should validate that the benefitGroupId and exclusionGroupId exist if provided
+    // should wrap these into a transaction for super-safety
+
+    await BenefitRecord.create({
+      snomed: this.snomed,
+      benefitGroupId: this.benefitGroupId,
+      exclusionGroupId: this.exclusionGroupId
+    });
+
+    await this.names.map(nameItem => {
+      TranslationRecord.create({
+        entityId: this.snomed,
+        language: nameItem.language,
+        value: nameItem.value,
+        type: "name"
       });
-      if (result) {
-        createdBenefit = {
-          snomed: result.dataValues.snomed,
-          benefitGroupId: result.dataValues.benefitGroupId,
-          exclusionGroupId: result.dataValues.exclusionGroupId,
-          names: [],
-          createdAt: result.dataValues.createdAt,
-          updatedAt: result.dataValues.updatedAt
-        };
 
-        // now the translations, save each in turn
-        await this.names.forEach(nameItem => {
-          const outputFromDb = TranslationRecord.create({
-            entityId: this.snomed,
-            language: nameItem.language,
-            value: nameItem.value,
-            type: "name"
-          });
-
-        })
-        LOG.debug("Created the benefit. Returning %o", createdBenefit);
-        return (createdBenefit);
-      }
-    } catch (err: any) {
-      LOG.info("Error of type %s", typeof err);
-      if (err instanceof Error) LOG.error(err.name, err.message);
-      throw new Error("Duplicate snomed probably!");
-    }
-
+    })
+    // having created it, read it back
+    return new ReadBenefit(this.snomed).read();
   }
 }
 export { CreateBenefit };
